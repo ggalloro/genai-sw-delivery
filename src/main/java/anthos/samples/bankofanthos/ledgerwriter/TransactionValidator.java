@@ -40,7 +40,7 @@ import static anthos.samples.bankofanthos.ledgerwriter.ExceptionMessages.
 @Component
 public class TransactionValidator {
 
-    // account ids should be 10 digits between 0 and 9
+    // account ids should be 10 digits between 0 and 9 -- FIXED
     private static final Pattern ACCT_REGEX = Pattern.compile("^[0-9]{10}$");
     // route numbers should be 9 digits between 0 and 9
     private static final Pattern ROUTE_REGEX = Pattern.compile("^[0-9]{9}$");

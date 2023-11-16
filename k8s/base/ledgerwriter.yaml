@@ -20,6 +20,10 @@ spec:
   selector:
     matchLabels:
       app: ledgerwriter
+      application: bank-of-anthos
+      environment: development
+      team: ledger
+      tier: backend
   template:
     metadata:
       labels:

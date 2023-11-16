@@ -42,6 +42,12 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
         image: ledgerwriter
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: publickey
+          mountPath: "/tmp/.ssh"
+          readOnly: true
         env:
         - name: VERSION
           value: "dev"
@@ -90,6 +96,15 @@ spec:
             port: 8080
           failureThreshold: 30
           periodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: tmp
+      - name: publickey
+        secret:
+          secretName: jwt-key
+          items:
+          - key: jwtRS256.key.pub
+            path: publickey
 ---
 apiVersion: v1
 kind: Service

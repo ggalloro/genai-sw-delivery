@@ -1,0 +1,25 @@
+steps:
+- name: gcr.io/k8s-skaffold/skaffold
+  entrypoint: /bin/bash
+  args:
+    - -c
+    - |
+      skaffold build --interactive=false --file-output=/workspace/artifacts.json --default-repo=$_REPO --push=true
+  id: skaffold-build
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
+  args:
+    [
+      "deploy", "releases", "create", "ledgerwriter-fix",
+      "--delivery-pipeline", "genai-sw-delivery",
+      "--region", "europe-west1",
+      "--annotations", "commitId=${REVISION_ID}",
+      "--build-artifacts", "/workspace/artifacts.json"
+    ]
+  waitFor: ['skaffold-build']
+# images:
+# - $_REPO/ledgerwriter:${SHORT_SHA}
+# options:
+#  requestedVerifyOption: VERIFIED
+
+

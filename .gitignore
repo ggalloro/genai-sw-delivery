@@ -2,3 +2,4 @@ target/
 artifacts.json
 .vscode
 .theia
+maven-wrapper.jar

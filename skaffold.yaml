@@ -21,8 +21,6 @@ build:
   - image: ledgerwriter
     context: .
     jib: {}
-  tagPolicy:
-    sha256: {}
 manifests:
   kustomize:
     paths:

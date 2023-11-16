@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static anthos.samples.bankofanthos.ledgerwriter.ExceptionMessages.
         EXCEPTION_MESSAGE_INVALID_NUMBER;
@@ -30,7 +31,6 @@ import static anthos.samples.bankofanthos.ledgerwriter.ExceptionMessages.
         EXCEPTION_MESSAGE_SEND_TO_SELF;
 import static anthos.samples.bankofanthos.ledgerwriter.ExceptionMessages.
         EXCEPTION_MESSAGE_INVALID_AMOUNT;
-
 
 /**
  * Validator to authenticate transaction.
@@ -47,6 +47,21 @@ public class TransactionValidator {
 
     private static final Logger LOGGER =
         LogManager.getLogger(TransactionValidator.class);
+
+    private void verifyAccountNumberFormat(String acctNum)
+            throws PatternSyntaxException {
+        if (!ACCT_REGEX.matcher(acctNum).matches()) {
+            throw new PatternSyntaxException("Invalid transaction: Invalid account number", ACCT_REGEX.toString(), 0);
+        }
+    }
+
+    private void verifyRoutingNumberFormat(String routeNum)
+            throws IllegalArgumentException {
+        if (!ROUTE_REGEX.matcher(routeNum).matches()) {
+            LOGGER.error("Invalid transaction: Invalid routing number");
+            throw new PatternSyntaxException("Invalid transaction: Invalid routing number", ROUTE_REGEX.toString(), 0);
+        }
+    }
 
     /**
      *   - Ensure sender is the same user authenticated by auth token
@@ -69,18 +84,20 @@ public class TransactionValidator {
         final String toAcct = transaction.getToAccountNum();
         final String toRoute = transaction.getToRoutingNum();
         final Integer amount = transaction.getAmount();
+        
+        try {
+                // Validate account numbers
+                verifyAccountNumberFormat(fromAcct);
+                verifyAccountNumberFormat(toAcct);
 
-        // Validate account and routing numbers.
-        if (!ACCT_REGEX.matcher(fromAcct).matches()
-                || !ACCT_REGEX.matcher(toAcct).matches()
-                || !ROUTE_REGEX.matcher(
-                        fromRoute).matches()
-                || !ROUTE_REGEX.matcher(
-                        toRoute).matches()) {
-            LOGGER.error("Invalid transaction: Invalid account details");
-            throw new IllegalArgumentException(
-                    EXCEPTION_MESSAGE_INVALID_NUMBER);
+                // Validate routing numbers
+                verifyRoutingNumberFormat(fromRoute);
+                verifyRoutingNumberFormat(toRoute);
+        } catch (PatternSyntaxException e) {
+                LOGGER.error(e.toString());
+                throw new IllegalArgumentException(EXCEPTION_MESSAGE_INVALID_NUMBER);
         }
+        
         // If this is an internal transaction,
         // ensure it originated from the authenticated user.
         if (fromRoute.equals(localRoutingNum) && !fromAcct.equals(authedAcct)) {
@@ -95,7 +112,7 @@ public class TransactionValidator {
         }
         // Ensure amount is valid value.
         if (amount <= 0) {
-            LOGGER.error("Invalid transaction: Transaction amount invalid");
+            LOGGER.error("Invalid transaction: Transaction amount " + amount + " is invalid");
             throw new IllegalArgumentException(
                     EXCEPTION_MESSAGE_INVALID_AMOUNT);
         }

@@ -28,6 +28,10 @@ spec:
     metadata:
       labels:
         app: ledgerwriter
+        application: bank-of-anthos
+        environment: development
+        team: ledger
+        tier: backend
     spec:
       serviceAccountName: bank-of-anthos
       terminationGracePeriodSeconds: 5

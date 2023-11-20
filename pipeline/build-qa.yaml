@@ -7,6 +7,8 @@ steps:
     id: Clone the git repo
   - name: gcr.io/cloud-builders/git
     args:
+      - C
+      - ./clone/
       - checkout
       - fix
     id: Clone fix branch

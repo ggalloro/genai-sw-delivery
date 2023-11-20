@@ -40,7 +40,7 @@ steps:
       - |
         skaffold build --interactive=false --file-output=/workspace/artifacts.json --default-repo=$_REPO --push=true
     id: skaffold-build
-  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  - name: gcr.io/cloud-builders/gcloud
     entrypoint: gcloud
     args:
       [

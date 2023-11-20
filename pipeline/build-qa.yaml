@@ -5,6 +5,11 @@ steps:
       - 'https://github.com/ggalloro/genai-sw-delivery'
       - ./clone/
     id: Clone the git repo
+  - name: gcr.io/cloud-builders/git
+    args:
+      - checkout
+      - fix
+    id: Clone fix branch
   - name: 'europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey:latest'
     args:
       - python3

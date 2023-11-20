@@ -4,7 +4,7 @@ steps:
   args:
     [
        "deploy", "releases", "promote", "--delivery-pipeline",
-       "genai-sw-delivery", "--release", "ledgerwriter-fix", 
+       "genai-sw-delivery", "--release", "ledgerwriter-fix-pr${_PR_NUMBER}", 
        "--region", "europe-west1"
     ]
 

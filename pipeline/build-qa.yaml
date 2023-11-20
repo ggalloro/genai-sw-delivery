@@ -10,7 +10,7 @@ steps:
   entrypoint: gcloud
   args:
     [
-      "deploy", "releases", "create", "ledgerwriter-fix",
+      "deploy", "releases", "create", "ledgerwriter-fix-pr${_PR_NUMBER}",
       "--delivery-pipeline", "genai-sw-delivery",
       "--region", "europe-west1",
       "--annotations", "commitId=${REVISION_ID}",

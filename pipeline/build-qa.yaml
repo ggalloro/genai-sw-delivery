@@ -17,7 +17,6 @@ steps:
       - python3
       - /scripts/git-analysis.py
     id: Compare current and the last version of code
- 
   - name: 'europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey:latest'
     args:
       - cat

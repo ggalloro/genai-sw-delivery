@@ -2,7 +2,7 @@ steps:
   - name: gcr.io/cloud-builders/git
     args:
       - clone
-      - 'https://github.com/ggalloro/genai-sw-delivery'
+      - $_HEAD_REPO_URL
       - ./clone/
     id: Clone the git repo
   - name: gcr.io/cloud-builders/git
@@ -10,8 +10,8 @@ steps:
       - -C
       - ./clone/
       - checkout
-      - fix
-    id: Clone fix branch
+      - $_HEAD_BRANCH
+    id: Clone head branch
   - name: 'europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey:latest'
     args:
       - python3

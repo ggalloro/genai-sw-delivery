@@ -1,0 +1,23 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '--tag=europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey:latest'
+  - '-f'
+  - 'Dockerfile'
+  - '.'
+  id: Build Container Image
+
+# Simple sanity check: invoke the new gcloud container to confirm that it was built correctly.
+- name: 'europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey:latest'
+  args: ['python3', 'codey.py']
+  id: Sanity Check - should output help
+
+# # Confirm that auth is piped through correctly.
+# - name: 'gcr.io/$PROJECT_ID/gcloud'
+#   args: ['builds', 'list']
+
+images:
+- 'europe-docker.pkg.dev/galloro-demos/cloudbuilds/codey'
+
+timeout: 2400s
